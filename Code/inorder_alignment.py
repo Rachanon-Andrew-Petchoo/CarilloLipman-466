@@ -1,4 +1,10 @@
-## Greedy Progressive Alignment
+'''
+Inorder Alignment:
+Combine the first sequence with the second sequence, then combine the resulting MSA with the third sequence, then combine the resulting MSA with the fourth sequence, and so on
+    - Another heuristic to use as z-value for Carillo-Lipman
+    - Made-up algorithm (doesn't exist in real life)
+'''
+
 from progressive_alignment import align_profile_profile
 from utils import get_delta_for_min
 
@@ -16,7 +22,7 @@ def sp_cost(msa, delta):
         sum += delta[characters[p]][characters[q]]
   return sum
 
-def greedy_progressive_align(alignments_input, alphabet, delta):
+def inorder_alignment(alignments_input, alphabet, delta):
     """
     :param: alignments is a list of strings representing the sequences to be aligned
             Note: This is because we need to represent our single sequences as multiple alignments
@@ -46,42 +52,11 @@ def greedy_progressive_align(alignments_input, alphabet, delta):
         best_m = -1
         best_n = -1
 
-        # Compute pairwise distances
-        for m in range(len(alignments)):
-            for n in range(m):
-                # YOUR CODE HERE
-                score, aligning = align_profile_profile(alignments[m], alignments[n], alphabet, delta)
-                if best_score < score:
-                  #maximise
-                  best_score = score
-                  best_alignment = aligning
-                  best_n = n
-                  best_m = m
+        # Combine sequence/MSA to sequence/MSA
+        
+        _, result_alignment = align_profile_profile(alignments[0], alignments[1], alphabet, delta)
 
         # Populate the list of alignments to use for the next iteration
-        next_alignments = [best_alignment]
-        for i in range(len(alignments)):
-            if i!=best_m and i!=best_n:
-                next_alignments.append(alignments[i])
-        alignments = next_alignments
-
-
-# Student test case (You may add more)
-
-# alphabet = ['A', 'C', 'G', 'T', '-']
-# delta_dna = {}
-# for i in range(len(alphabet)):
-#     delta_dna[alphabet[i]] = {k : v for (k,v)
-#                           in zip(alphabet, [1 if alphabet[i] == alphabet[j]  else -1
-#                                   for j in range(len(alphabet))]
-#                          )}
-
-
-# alphabet = ['A', 'R', 'N', 'D', 'C', 'E', 'Q', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V', '-']
-# delta_protein = {}
-# for i in range(len(alphabet)):
-#     delta_protein[alphabet[i]] = {k : v for (k,v)
-#                           in zip(alphabet, [1 if alphabet[i] == alphabet[j]  else -1
-#                                   for j in range(len(alphabet))]
-#                          )}
-
+        del alignments[0]
+        del alignments[0] # Former index 1
+        alignments.insert(0, result_alignment)
