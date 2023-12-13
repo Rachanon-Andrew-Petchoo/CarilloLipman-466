@@ -15,5 +15,4 @@
 ## Team
 - Shaurya Singh (`shaurya8`)
 - Rachanon Petchoo (`petchoo2`)
-- Noel Mrowiec (`mrowiec3`)
 - Nick Winkler (`ngw4`)
